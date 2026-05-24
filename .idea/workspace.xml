@@ -5,19 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0d7cc0fb-1ff2-4dd0-8b52-1c8c61202415" name="Changes" comment="update">
-      <change afterPath="$PROJECT_DIR$/SDEL/SDEL/dist/main/purehealthDb.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/SoftwareDesign.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/SoftwareDesign.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/dashboard.py" beforeDir="false" afterPath="$PROJECT_DIR$/SDEL/SDEL/dashboard.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/SDEL/SDEL/database.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/modules/appointments.py" beforeDir="false" afterPath="$PROJECT_DIR$/SDEL/SDEL/modules/appointments.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/modules/billing.py" beforeDir="false" afterPath="$PROJECT_DIR$/SDEL/SDEL/modules/billing.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/modules/dashboard_mod.py" beforeDir="false" afterPath="$PROJECT_DIR$/SDEL/SDEL/modules/dashboard_mod.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/modules/patients.py" beforeDir="false" afterPath="$PROJECT_DIR$/SDEL/SDEL/modules/patients.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/dist/main/purehealthDb.db" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/SDEL/SDEL/modules/reports.py" beforeDir="false" afterPath="$PROJECT_DIR$/SDEL/SDEL/modules/reports.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/modules/services.py" beforeDir="false" afterPath="$PROJECT_DIR$/SDEL/SDEL/modules/services.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/modules/test_results.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/purehealthDb.db" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,15 +45,15 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.import_data.executor": "Run",
-    "Python.main.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/jhovany/PycharmProjects/SoftwareDesign/SDEL/SDEL/dist/main"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.import_data.executor&quot;: &quot;Run&quot;,
+    &quot;Python.main.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/jhovany/PycharmProjects/SoftwareDesign/SDEL/SDEL/dist/main&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\jhovany\PycharmProjects\SoftwareDesign\SDEL\SDEL\dist\main" />
@@ -125,7 +115,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779598419019</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="update">
+      <option name="closed" value="true" />
+      <created>1779654857283</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1779654857283</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

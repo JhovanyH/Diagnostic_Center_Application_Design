@@ -12,6 +12,12 @@ from datetime import datetime, date, timedelta
 import calendar
 from database import db
 
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+import os
+
+
+
 # ── Colour palette ─────────────────────────────────────────────────────────────
 TEAL_DARK = "#073b4c"
 TEAL_MID = "#0c637f"
@@ -652,16 +658,19 @@ class ReportsModule:
                         font=("Segoe UI", 9, "bold"), relief="flat", padding=6)
         style.map("Reports.Treeview", background=[("selected", "#e0f2fe")], foreground=[("selected", TEXT_MAIN)])
 
-        tree = ttk.Treeview(parent, columns=cols, show="headings", style="Reports.Treeview")
-        for col, w in zip(cols, widths):
-            tree.heading(col, text=col)
-            tree.column(col, width=w, anchor="w")
+        # THE FIX: Assign this to self.tree
+        self.tree = ttk.Treeview(parent, columns=cols, show="headings", style="Reports.Treeview")
 
-        vsb = ttk.Scrollbar(parent, orient="vertical", command=tree.yview)
-        tree.configure(yscrollcommand=vsb.set)
-        tree.pack(side="left", fill="both", expand=True)
+        for col, w in zip(cols, widths):
+            self.tree.heading(col, text=col)
+            self.tree.column(col, width=w, anchor="w")
+
+        vsb = ttk.Scrollbar(parent, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=vsb.set)
+        self.tree.pack(side="left", fill="both", expand=True)
         vsb.pack(side="right", fill="y")
-        return tree, vsb
+
+        return self.tree, vsb
 
     def _solid_btn(self, parent, text, command):
         return tk.Button(parent, text=text, command=command, font=("Segoe UI", 10, "bold"), bg=TEAL_DARK, fg=WHITE,
@@ -678,4 +687,36 @@ class ReportsModule:
         tk.Label(chip, text=f"  {value}  {label}  ", font=("Segoe UI", 9, "bold"), bg=bg, fg=fg, pady=5).pack()
 
     def _export(self, fmt):
-        messagebox.showinfo(f"Export to {fmt}", f"Report exported as {fmt} successfully.\nCheck your Documents folder.")
+        if fmt != "PDF":
+            messagebox.showinfo("Export", "Excel export is coming soon!")
+            return
+
+        # Instead of searching through frames, we use self.tree directly
+        if not hasattr(self, 'tree') or not self.tree.get_children():
+            messagebox.showwarning("Empty", "No data to export.")
+            return
+
+        rows = []
+        for item in self.tree.get_children():
+            rows.append(self.tree.item(item, "values"))
+
+        # ... (rest of your PDF creation code stays the same) ...
+        user_docs = os.path.join(os.path.expanduser("~"), "Documents")
+        filename = os.path.join(user_docs, f"Report_{datetime.now().strftime('%Y%m%d_%H%M%S')}.pdf")
+
+        c = canvas.Canvas(filename, pagesize=letter)
+        c.setFont("Helvetica-Bold", 16)
+        c.drawString(50, 750, "PureHealth Diagnostic Center - Report")
+        c.setFont("Helvetica", 10)
+        c.drawString(50, 730, f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}")
+
+        y = 700
+        for row in rows:
+            text = " | ".join([str(x) for x in row])
+            c.drawString(50, y, text)
+            y -= 20
+            if y < 50:
+                c.showPage()
+                y = 750
+        c.save()
+        messagebox.showinfo("Success", f"PDF Exported to:\n{filename}")
