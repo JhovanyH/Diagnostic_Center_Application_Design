@@ -19,7 +19,12 @@ from modules.services import ServicesModule
 from modules.reports import ReportsModule
 
 # ========== CONFIGURATION ==========
-CLINIC_LOGO_PATH = "assets/purehealth_logo.png"
+def resource_path(relative):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative)
+    return os.path.join(os.path.dirname(os.path.abspath(__file__)), relative)
+
+CLINIC_LOGO_PATH = resource_path(os.path.join("assets", "logo_purehealth.png"))
 DB_PATH = "purehealthDb.db"
 # ===================================
 

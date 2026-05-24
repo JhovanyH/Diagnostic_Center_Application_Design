@@ -785,6 +785,34 @@ class Database:
         conn.close()
         return rows
 
+    def update_patient(self, patient_id: int, data: dict):
+        conn = self.connect()
+        conn.execute("""
+            UPDATE patients SET
+                last_name=?, first_name=?, middle_name=?,
+                birthdate=?, sex=?, civil_status=?,
+                contact_number=?, email=?, philhealth_no=?,
+                address=?, emergency_name=?,
+                emergency_relation=?, emergency_contact=?
+            WHERE id=?
+        """, (
+            data.get("last_name"), data.get("first_name"),
+            data.get("middle_name"), data.get("birthdate"),
+            data.get("sex"), data.get("civil_status"),
+            data.get("contact_number"), data.get("email"),
+            data.get("philhealth_no"), data.get("address"),
+            data.get("emergency_name"), data.get("emergency_relation"),
+            data.get("emergency_contact"), patient_id
+        ))
+        conn.commit()
+        conn.close()
+
+    def delete_patient(self, patient_id: int):
+        conn = self.connect()
+        conn.execute("DELETE FROM patients WHERE id=?", (patient_id,))
+        conn.commit()
+        conn.close()
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # GLOBAL INSTANCE  — import this everywhere instead of creating new Database()
