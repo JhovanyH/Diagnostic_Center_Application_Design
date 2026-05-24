@@ -1,5 +1,8 @@
 import tkinter as tk
 import os
+import sys
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from database import db
 
 try:
     from PIL import Image, ImageTk
@@ -12,7 +15,6 @@ from modules.dashboard_mod import DashboardModule
 from modules.patients import PatientsModule
 from modules.appointments import AppointmentsModule
 from modules.billing import BillingModule
-from modules.test_results import TestResultsModule
 from modules.services import ServicesModule
 from modules.reports import ReportsModule
 
@@ -100,7 +102,6 @@ class MainDashboard:
             "Patients":           self.show_patients,
             "Appointments":       self.show_appointments,
             "Billing & Payments": self.show_billing,
-            "Test Results":       self.show_test_results,
             "Services & Pricing": self.show_services,
             "Reports":            self.show_reports,
         }
@@ -131,9 +132,6 @@ class MainDashboard:
 
     def show_billing(self):
         self._switch(BillingModule, "Billing & Payments")
-
-    def show_test_results(self):
-        self._switch(TestResultsModule, "Test Results")
 
     def show_services(self):
         self._switch(ServicesModule, "Services & Pricing")
