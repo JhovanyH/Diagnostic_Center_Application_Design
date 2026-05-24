@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0d7cc0fb-1ff2-4dd0-8b52-1c8c61202415" name="Changes" comment="update">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SDEL/SDEL/dist/main/purehealthDb.db" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/SDEL/SDEL/modules/reports.py" beforeDir="false" afterPath="$PROJECT_DIR$/SDEL/SDEL/modules/reports.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -45,17 +44,18 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python.import_data.executor&quot;: &quot;Run&quot;,
-    &quot;Python.main.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/jhovany/PycharmProjects/SoftwareDesign/SDEL/SDEL/dist/main&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.import_data.executor": "Run",
+    "Python.main.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "C:/Users/jhovany/PycharmProjects/SoftwareDesign/dist/main"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\jhovany\PycharmProjects\SoftwareDesign\dist\main" />
       <recent name="C:\Users\jhovany\PycharmProjects\SoftwareDesign\SDEL\SDEL\dist\main" />
     </key>
   </component>
@@ -123,7 +123,15 @@
       <option name="project" value="LOCAL" />
       <updated>1779654857283</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="update">
+      <option name="closed" value="true" />
+      <created>1779662005731</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1779662005731</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

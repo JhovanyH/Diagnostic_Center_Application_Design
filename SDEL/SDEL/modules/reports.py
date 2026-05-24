@@ -242,8 +242,22 @@ class ReportsModule:
         frow.pack(fill="x", padx=14, pady=12)
 
         # Build month list dynamically
+        # FIX: Perfectly accurate month list for the dropdown
+        month_list = []
         today = date.today()
-        month_list = [(today.replace(day=1) - timedelta(days=30 * i)).strftime("%B %Y") for i in range(12)]
+        for i in range(12):
+            # Calculate the year and month
+            year = today.year
+            month = today.month - i
+
+            # Roll back the year if the month goes into the previous year
+            while month <= 0:
+                month += 12
+                year -= 1
+
+            # Format as "Month Year" (e.g., "May 2026")
+            month_name = date(year, month, 1).strftime("%B %Y")
+            month_list.append(month_name)
 
         ctk.CTkLabel(frow, text="Month", font=("Segoe UI", 9), text_color=TEXT_MUTED).pack(side="left")
         month_combo = ctk.CTkComboBox(frow, values=month_list, font=("Segoe UI", 10), height=32, width=160,
@@ -318,38 +332,58 @@ class ReportsModule:
 
     def _draw_bar_chart(self, parent):
         """Draws a live 7-month historical chart using DB data."""
+        # Clear previous chart elements if any
+        for w in parent.winfo_children():
+            if isinstance(w, tk.Canvas): w.destroy()
+
         canvas = tk.Canvas(parent, bg=WHITE, height=200, highlightthickness=0)
         canvas.pack(fill="x", padx=14, pady=(0, 14))
         canvas.update_idletasks()
 
-        cw, ch = canvas.winfo_width() or 500, 200
+        cw = canvas.winfo_width() or 500
+        ch = 200
         margin_l, margin_b = 40, 40
         chart_w, chart_h = cw - margin_l - 20, ch - margin_b - 20
 
-        # Get last 7 months data
+        # FIX: Correctly calculate the last 7 months
         historical = []
         today = date.today()
         for i in range(6, -1, -1):
-            m_date = (today.replace(day=1) - timedelta(days=30 * i))
-            start = m_date.replace(day=1).strftime("%Y-%m-%d")
-            next_month = m_date.replace(day=28) + timedelta(days=4)
-            end = (next_month - timedelta(days=next_month.day)).strftime("%Y-%m-%d")
-            count = len(db.get_appointments_by_date_range(start, end))
-            color = TEAL_ACCENT if i == 0 else "#cbd5e1"
-            historical.append((m_date.strftime("%b"), count, color))
+            # Correct logic: Subtract i months from today
+            m = today.month - i
+            y = today.year
+            if m <= 0:
+                m += 12
+                y -= 1
 
+            # Start and End of that month
+            _, last_day = calendar.monthrange(y, m)
+            start_date = f"{y}-{m:02d}-01"
+            end_date = f"{y}-{m:02d}-{last_day}"
+
+            # Count appointments
+            count = len(db.get_appointments_by_date_range(start_date, end_date))
+            month_name = calendar.month_abbr[m]
+
+            color = TEAL_ACCENT if i == 0 else "#cbd5e1"
+            historical.append((month_name, count, color))
+
+        # Draw Chart
         max_val = max((v for _, v, _ in historical), default=1)
-        max_val = max(max_val, 10)  # Set a minimum scale
+        max_val = max(max_val, 5)  # Scale to at least 5
+
         n = len(historical)
         bar_w = (chart_w / n) * 0.6
         gap = (chart_w / n) * 0.4
 
+        # Draw grid lines
         for i in range(5):
             y = (ch - margin_b) - (i / 4) * chart_h
             canvas.create_line(margin_l, y, cw - 20, y, fill=BORDER, dash=(4, 4))
             canvas.create_text(margin_l - 6, y, text=str(int(max_val * i / 4)), font=("Segoe UI", 8), fill=TEXT_HINT,
                                anchor="e")
 
+        # Draw bars
         for i, (month, val, color) in enumerate(historical):
             x0 = margin_l + i * (chart_w / n) + gap / 2
             x1 = x0 + bar_w
@@ -358,11 +392,9 @@ class ReportsModule:
             y1 = ch - margin_b
 
             canvas.create_rectangle(x0, y0, x1, y1, fill=color, outline="")
-            canvas.create_text((x0 + x1) / 2, y0 - 6, text=str(val), font=("Segoe UI", 8, "bold"),
-                               fill=TEAL_DARK if color == TEAL_ACCENT else TEXT_MUTED)
-            canvas.create_text((x0 + x1) / 2, ch - margin_b + 12, text=month,
-                               font=("Segoe UI", 8, "bold" if color == TEAL_ACCENT else "normal"),
-                               fill=TEAL_DARK if color == TEAL_ACCENT else TEXT_MUTED)
+            canvas.create_text((x0 + x1) / 2, y0 - 10, text=str(val), font=("Segoe UI", 8, "bold"), fill=TEAL_DARK)
+            canvas.create_text((x0 + x1) / 2, ch - margin_b + 12, text=month, font=("Segoe UI", 8, "bold"),
+                               fill=TEXT_MUTED)
 
     # ── REPORT 3: Test Statistics ─────────────────────────────────────────────
     def _build_test_statistics(self, parent, name, desc, bg, fg):
