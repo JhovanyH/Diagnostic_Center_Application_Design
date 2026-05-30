@@ -26,7 +26,7 @@ class Database:
 
     def connect(self):
         """Open and return a connection. Always call .close() when done."""
-        conn = sqlite3.connect(self.db_name)
+        conn = sqlite3.connect(self.db_name, timeout=10)
         conn.row_factory = sqlite3.Row   # rows behave like dicts: row["name"]
         conn.execute("PRAGMA foreign_keys = ON")   # enforce FK relationships
         return conn
@@ -417,7 +417,8 @@ class Database:
     def create_bill(self, patient_id, service_ids: list,
                     discount_type="None", discount_amount=0.0,
                     payment_method="Cash", amount_received=0.0,
-                    status="Paid", appointment_id=None):
+                    status="Paid", appointment_id=None,
+                    subtotal_override=None, total_override=None):
         """
         Create a bill + its line items in one transaction.
         Returns the new bill ID.
@@ -431,8 +432,10 @@ class Database:
             f"SELECT id, price FROM services WHERE id IN ({placeholders})",
             service_ids
         ).fetchall()
-        subtotal = sum(r["price"] for r in rows)
-        total    = max(0.0, subtotal - discount_amount)
+        subtotal = subtotal_override if subtotal_override is not None \
+            else sum(r["price"] for r in rows)
+        total = total_override if total_override is not None \
+            else max(0.0, subtotal - discount_amount)
         change   = max(0.0, amount_received - total)
         paid_at  = datetime.now().strftime("%Y-%m-%d %H:%M:%S") \
                    if status == "Paid" else None
@@ -807,11 +810,59 @@ class Database:
         conn.commit()
         conn.close()
 
-    def delete_patient(self, patient_id: int):
+    def delete_patient(self, patient_id):
+        """
+        Delete a patient and all their related records.
+        Must delete child records first before the patient
+        (foreign key order matters).
+        """
         conn = self.connect()
-        conn.execute("DELETE FROM patients WHERE id=?", (patient_id,))
-        conn.commit()
-        conn.close()
+        try:
+            # Delete result parameters linked to this patient's results
+            conn.execute("""
+                DELETE FROM result_parameters
+                WHERE test_result_id IN (
+                    SELECT id FROM test_results
+                    WHERE patient_id = ?
+                )
+            """, (patient_id,))
+
+            # Delete test results
+            conn.execute(
+                "DELETE FROM test_results WHERE patient_id = ?",
+                (patient_id,))
+
+            # Delete bill items linked to this patient's bills
+            conn.execute("""
+                DELETE FROM bill_items
+                WHERE bill_id IN (
+                    SELECT id FROM bills
+                    WHERE patient_id = ?
+                )
+            """, (patient_id,))
+
+            # Delete bills
+            conn.execute(
+                "DELETE FROM bills WHERE patient_id = ?",
+                (patient_id,))
+
+            # Delete appointments
+            conn.execute(
+                "DELETE FROM appointments WHERE patient_id = ?",
+                (patient_id,))
+
+            # Finally delete the patient
+            conn.execute(
+                "DELETE FROM patients WHERE id = ?",
+                (patient_id,))
+
+            conn.commit()
+            return True
+        except Exception as e:
+            conn.rollback()
+            raise e
+        finally:
+            conn.close()  # ← always closes even if error occurs
 
 
 # ─────────────────────────────────────────────────────────────────────────────

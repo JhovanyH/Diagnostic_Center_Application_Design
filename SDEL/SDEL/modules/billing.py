@@ -857,6 +857,8 @@ class BillingModule:
                 payment_method=method,
                 amount_received=recv,
                 status="Paid",
+                subtotal_override=self.subtotal,
+                total_override=total,
             )
             db.log_action(
                 "receptionist",
@@ -891,6 +893,8 @@ class BillingModule:
         service_ids = [s["id"] for s in self.added_services]
 
         try:
+            total = max(0.0, self.subtotal - disc_amt)  # ← add this line first
+
             bill_id = db.create_bill(
                 patient_id=self.current_patient["id"],
                 service_ids=service_ids,
@@ -899,6 +903,8 @@ class BillingModule:
                 payment_method="—",
                 amount_received=0.0,
                 status="Unpaid",
+                subtotal_override=self.subtotal,
+                total_override=total,
             )
             db.log_action(
                 "receptionist",
